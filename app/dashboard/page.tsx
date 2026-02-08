@@ -2,13 +2,14 @@ import { auth } from "@clerk/nextjs/server";
 import { getUserDecks } from "@/src/db/queries/decks";
 import { CreateDeckDialog } from "@/components/create-deck-dialog";
 import { DeleteDeckButton } from "@/components/delete-deck-button";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Link from "next/link";
 import { BookOpen, Layers } from "lucide-react";
 import { redirect } from "next/navigation";
 
 export default async function DashboardPage() {
-    const { userId } = await auth();
+    const { userId, has } = await auth();
 
     if (!userId) {
         redirect("/");
@@ -16,6 +17,9 @@ export default async function DashboardPage() {
 
     // Fetch decks with card counts
     const userDecks = await getUserDecks(userId);
+
+    const isPro = has({ plan: "pro" });
+    const isAtLimit = !isPro && userDecks.length >= 3;
 
     return (
         <div className="min-h-[calc(100vh-65px)] bg-background relative overflow-hidden">
@@ -35,12 +39,29 @@ export default async function DashboardPage() {
                     </div>
                 </div>
 
+                {isAtLimit && (
+                    <div className="mb-8 p-4 bg-primary/10 border border-primary/20 rounded-2xl flex items-center justify-between gap-4 animate-in fade-in slide-in-from-top-4 duration-500">
+                        <div className="flex items-center gap-3">
+                            <Layers className="h-5 w-5 text-primary" />
+                            <p className="text-sm font-medium">
+                                You&apos;ve reached the 3 deck limit for the Free plan.
+                                <span className="hidden sm:inline"> Upgrade to Pro for unlimited decks!</span>
+                            </p>
+                        </div>
+                        <Link href="/pricing">
+                            <Button size="sm" variant="default" className="rounded-full px-4 font-bold shadow-sm hover:scale-105 active:scale-95 transition-all">
+                                Upgrade Now
+                            </Button>
+                        </Link>
+                    </div>
+                )}
+
                 {userDecks.length === 0 ? (
                     <div className="flex flex-col items-center justify-center py-20 border-2 border-dashed border-border rounded-3xl bg-muted/20 backdrop-blur-sm">
                         <Layers className="h-16 w-16 text-muted-foreground/30 mb-4" />
                         <h3 className="text-xl font-semibold text-foreground">No decks yet</h3>
                         <p className="text-muted-foreground mb-6">Create your first deck to start studying!</p>
-                        <CreateDeckDialog />
+                        <CreateDeckDialog isAtLimit={isAtLimit} />
                     </div>
                 ) : (
                     <div className="space-y-10">
@@ -50,7 +71,7 @@ export default async function DashboardPage() {
                                     <DeleteDeckButton deckId={deck.id} />
                                     <Link href={`/decks/${deck.id}`}>
                                         <Card className="relative overflow-hidden border-border bg-card/50 backdrop-blur-sm hover:bg-card/80 transition-all duration-300 hover:scale-[1.02] hover:shadow-xl hover:shadow-primary/10 cursor-pointer h-full flex flex-col">
-                                            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary/50 to-primary opacity-0 group-hover:opacity-100 transition-opacity" />
+                                            <div className="absolute top-0 left-0 w-full h-1 bg-linear-to-r from-primary/50 to-primary opacity-0 group-hover:opacity-100 transition-opacity" />
                                             <CardHeader className="pb-2">
                                                 <CardTitle className="text-xl font-bold group-hover:text-primary transition-colors line-clamp-2">
                                                     {deck.title}
@@ -76,7 +97,7 @@ export default async function DashboardPage() {
                             ))}
                         </div>
                         <div className="flex justify-center">
-                            <CreateDeckDialog />
+                            <CreateDeckDialog isAtLimit={isAtLimit} />
                         </div>
                     </div>
                 )}

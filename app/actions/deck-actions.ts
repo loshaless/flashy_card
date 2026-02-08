@@ -1,7 +1,7 @@
 "use server";
 
 import { auth } from "@clerk/nextjs/server";
-import { createDeck, deleteDeck, updateDeck } from "@/src/db/queries/decks";
+import { createDeck, deleteDeck, updateDeck, getUserDecks } from "@/src/db/queries/decks";
 import { z } from "zod";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
@@ -14,10 +14,19 @@ const createDeckSchema = z.object({
 export type CreateDeckInput = z.infer<typeof createDeckSchema>;
 
 export async function createDeckAction(data: CreateDeckInput) {
-    const { userId } = await auth();
+    const { userId, has } = await auth();
 
     if (!userId) {
         redirect("/");
+    }
+
+    // Check plan and deck limit
+    const isPro = has({ plan: "pro" });
+    if (!isPro) {
+        const userDecks = await getUserDecks(userId);
+        if (userDecks.length >= 3) {
+            throw new Error("You've reached the 3 deck limit for the Free plan. Upgrade to Pro for unlimited decks!");
+        }
     }
 
     const validatedData = createDeckSchema.parse(data);

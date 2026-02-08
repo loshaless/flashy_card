@@ -8,9 +8,11 @@ import {
   SignedOut,
   UserButton,
 } from "@clerk/nextjs";
+import { auth } from "@clerk/nextjs/server";
 import { dark } from "@clerk/themes";
 import { Button } from "@/components/ui/button";
 import { Toaster } from "@/components/ui/sonner";
+import Link from "next/link";
 import "./globals.css";
 
 const poppins = Poppins({
@@ -39,7 +41,19 @@ export default function RootLayout({
         <body className={`${poppins.variable} font-sans antialiased`}>
           <header className="border-b">
             <div className="container mx-auto flex justify-between items-center h-16 px-4">
-              <div className="font-bold text-xl">Flash Card</div>
+              <div className="flex items-center gap-8">
+                <Link href="/" className="font-bold text-xl">Flash Card</Link>
+                <nav className="hidden md:flex items-center gap-6">
+                  <Link href="/pricing" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+                    Pricing
+                  </Link>
+                  <SignedIn>
+                    <Link href="/dashboard" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+                      Dashboard
+                    </Link>
+                  </SignedIn>
+                </nav>
+              </div>
               <div className="flex gap-4">
                 <SignedOut>
                   <div className="flex gap-2">
@@ -52,7 +66,10 @@ export default function RootLayout({
                   </div>
                 </SignedOut>
                 <SignedIn>
-                  <UserButton afterSignOutUrl="/" />
+                  <div className="flex items-center gap-4">
+                    <PlanStatus />
+                    <UserButton afterSignOutUrl="/" />
+                  </div>
                 </SignedIn>
               </div>
             </div>
@@ -62,6 +79,20 @@ export default function RootLayout({
         </body>
       </html>
     </ClerkProvider>
+  );
+}
+
+async function PlanStatus() {
+  const { has } = await auth();
+  const isPro = has({ plan: "pro" });
+
+  return (
+    <div className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider border ${isPro
+      ? "bg-primary/10 border-primary/20 text-primary"
+      : "bg-muted border-border text-muted-foreground"
+      }`}>
+      {isPro ? "Pro" : "Free"}
+    </div>
   );
 }
 

@@ -12,14 +12,18 @@ import { DeleteCardButton } from "@/components/delete-card-button";
 import { EditDeckDialog } from "@/components/edit-deck-dialog";
 import { DeleteDeckButton } from "@/components/delete-deck-button";
 import { Trash2 } from "lucide-react";
+import { BulkAddCardsDialog } from "@/components/bulk-add-cards-dialog";
+import { AIGenerateDialog } from "@/components/ai-generate-dialog";
 
 type Props = {
     params: Promise<{ deckId: string }>;
 };
 
 export default async function DeckPage({ params }: Props) {
-    const { userId } = await auth();
+    const { userId, has } = await auth();
     if (!userId) redirect("/");
+
+    const isPro = has({ plan: "pro" });
 
     const resolvedParams = await params;
     const deckId = parseInt(resolvedParams.deckId);
@@ -93,6 +97,8 @@ export default async function DeckPage({ params }: Props) {
                                 </Button>
                             }
                         />
+                        <BulkAddCardsDialog deckId={deckId} isPro={isPro} />
+                        <AIGenerateDialog deckId={deckId} deckTitle={deck.title} isPro={isPro} />
                         <EditDeckDialog
                             deck={{ id: deck.id, title: deck.title, description: deck.description }}
                             trigger={

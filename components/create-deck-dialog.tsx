@@ -26,13 +26,18 @@ import {
 import { Input } from "@/components/ui/input";
 import { createDeckAction } from "@/app/actions/deck-actions";
 import { toast } from "sonner";
+import Link from "next/link";
 
 const formSchema = z.object({
     title: z.string().min(1, "Title is required").max(100),
     description: z.string().max(500).optional(),
 });
 
-export function CreateDeckDialog() {
+interface CreateDeckDialogProps {
+    isAtLimit?: boolean;
+}
+
+export function CreateDeckDialog({ isAtLimit }: CreateDeckDialogProps) {
     const [open, setOpen] = useState(false);
     const [loading, setLoading] = useState(false);
 
@@ -51,12 +56,23 @@ export function CreateDeckDialog() {
             setOpen(false);
             form.reset();
             toast.success("Deck created successfully!");
-        } catch (error) {
+        } catch (error: unknown) {
             console.error(error);
-            toast.error("Failed to create deck");
+            const errorMessage = error instanceof Error ? error.message : "Failed to create deck";
+            toast.error(errorMessage);
         } finally {
             setLoading(false);
         }
+    }
+
+    if (isAtLimit) {
+        return (
+            <Link href="/pricing">
+                <Button className="rounded-full shadow-lg hover:scale-105 active:scale-95 transition-all bg-primary/90 hover:bg-primary">
+                    <Plus className="mr-2 h-4 w-4" /> New Deck
+                </Button>
+            </Link>
+        );
     }
 
     return (
