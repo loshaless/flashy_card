@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { deleteDeckAction } from "@/app/actions/deck-actions";
 import { useState } from "react";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 import {
     AlertDialog,
     AlertDialogAction,
@@ -19,16 +20,22 @@ import {
 
 interface DeleteDeckButtonProps {
     deckId: number;
+    trigger?: React.ReactNode;
+    redirectTo?: string;
 }
 
-export function DeleteDeckButton({ deckId }: DeleteDeckButtonProps) {
+export function DeleteDeckButton({ deckId, trigger, redirectTo }: DeleteDeckButtonProps) {
     const [loading, setLoading] = useState(false);
+    const router = useRouter();
 
     async function handleDelete() {
         try {
             setLoading(true);
             await deleteDeckAction(deckId);
             toast.success("Deck deleted successfully");
+            if (redirectTo) {
+                router.push(redirectTo);
+            }
         } catch (error) {
             console.error(error);
             toast.error("Failed to delete deck");
@@ -40,14 +47,16 @@ export function DeleteDeckButton({ deckId }: DeleteDeckButtonProps) {
     return (
         <AlertDialog>
             <AlertDialogTrigger asChild>
-                <Button
-                    variant="ghost"
-                    size="icon"
-                    className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-destructive/10 hover:text-destructive z-20 h-8 w-8 rounded-full"
-                    onClick={(e) => e.stopPropagation()} // Prevent link navigation
-                >
-                    <Trash2 className="h-4 w-4" />
-                </Button>
+                {trigger || (
+                    <Button
+                        variant="ghost"
+                        size="icon"
+                        className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-destructive/10 hover:text-destructive z-20 h-8 w-8 rounded-full"
+                        onClick={(e) => e.stopPropagation()} // Prevent link navigation
+                    >
+                        <Trash2 className="h-4 w-4" />
+                    </Button>
+                )}
             </AlertDialogTrigger>
             <AlertDialogContent className="bg-background border-border">
                 <AlertDialogHeader>

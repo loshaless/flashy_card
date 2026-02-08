@@ -10,6 +10,8 @@ import { CreateCardDialog } from "@/components/create-card-dialog";
 import { EditCardDialog } from "@/components/edit-card-dialog";
 import { DeleteCardButton } from "@/components/delete-card-button";
 import { EditDeckDialog } from "@/components/edit-deck-dialog";
+import { DeleteDeckButton } from "@/components/delete-deck-button";
+import { Trash2 } from "lucide-react";
 
 type Props = {
     params: Promise<{ deckId: string }>;
@@ -97,6 +99,16 @@ export default async function DeckPage({ params }: Props) {
                                 <Button variant="secondary" className="h-14 px-8 rounded-2xl transition-all hover:scale-105 active:scale-95 text-md font-bold w-full border border-border/50 shadow-md">
                                     <Pencil className="mr-2 h-4 w-4 text-muted-foreground" />
                                     Edit Deck Detail
+                                </Button>
+                            }
+                        />
+                        <DeleteDeckButton
+                            deckId={deckId}
+                            redirectTo="/dashboard"
+                            trigger={
+                                <Button variant="ghost" className="h-14 px-8 rounded-2xl transition-all hover:scale-105 active:scale-95 text-md font-bold w-full hover:bg-destructive/10 hover:text-destructive text-muted-foreground">
+                                    <Trash2 className="mr-2 h-4 w-4" />
+                                    Delete Deck
                                 </Button>
                             }
                         />

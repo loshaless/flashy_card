@@ -11,7 +11,7 @@ export const decks = pgTable("decks", {
 
 export const cards = pgTable("cards", {
     id: serial("id").primaryKey(),
-    deckId: integer("deck_id").references(() => decks.id).notNull(),
+    deckId: integer("deck_id").references(() => decks.id, { onDelete: 'cascade' }).notNull(),
     front: text("front").notNull(),
     back: text("back").notNull(),
     createdAt: timestamp("created_at").defaultNow().notNull(),
