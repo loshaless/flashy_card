@@ -4,6 +4,7 @@ export const decks = pgTable("decks", {
     id: serial("id").primaryKey(),
     userId: varchar("user_id", { length: 255 }).notNull(),
     title: text("title").notNull(),
+    description: text("description"),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at").$onUpdate(() => new Date()),
 });

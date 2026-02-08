@@ -1,56 +1,54 @@
-import Image from "next/image";
-import { SignedIn, SignedOut } from "@clerk/nextjs";
+"use client";
+
+import { SignInButton, SignUpButton, SignedIn, SignedOut } from "@clerk/nextjs";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export default function Home() {
   return (
-    <div className="flex min-h-[calc(100-3.5rem)] items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-[calc(100vh-3.5rem)] w-full max-w-3xl flex-col items-center justify-center gap-12 py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
+    <div className="relative flex flex-col items-center justify-center min-h-[calc(100vh-65px)] overflow-hidden bg-background">
+      {/* Premium Background Glows */}
+      <div className="absolute top-1/4 -left-20 w-80 h-80 bg-primary/20 rounded-full blur-[100px] pointer-events-none" />
+      <div className="absolute bottom-1/4 -right-20 w-80 h-80 bg-primary/10 rounded-full blur-[100px] pointer-events-none" />
+
+      <div className="container relative z-10 px-4 text-center">
+        <div className="space-y-4 mb-10">
+          <h1 className="text-6xl md:text-8xl font-black tracking-tight text-foreground animate-in fade-in slide-in-from-bottom-4 duration-1000">
+            Flash <span className="text-muted-foreground opacity-80">Card</span>
+          </h1>
+          <p className="text-xl md:text-2xl text-muted-foreground font-medium animate-in fade-in slide-in-from-bottom-6 duration-1000 delay-200">
+            Your Personal Flashcard Platform
+          </p>
+        </div>
+
+        <div className="flex flex-col sm:flex-row gap-4 items-center justify-center animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-500">
           <SignedOut>
-            <h1 className="max-w-md text-4xl font-bold leading-tight tracking-tight text-black dark:text-zinc-50">
-              Your Next.js project is now secured with Clerk.
-            </h1>
-            <p className="max-w-md text-lg text-zinc-600 dark:text-zinc-400">
-              Sign in to see the authenticated state and explore the possibilities.
-            </p>
+            <SignInButton mode="modal">
+              <Button size="lg" className="rounded-full px-8 h-12 text-lg font-semibold shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all hover:scale-105 active:scale-95">
+                Sign In
+              </Button>
+            </SignInButton>
+            <SignUpButton mode="modal">
+              <Button variant="outline" size="lg" className="rounded-full px-8 h-12 text-lg font-semibold transition-all hover:scale-105 active:scale-95">
+                Sign Up
+              </Button>
+            </SignUpButton>
           </SignedOut>
+
           <SignedIn>
-            <h1 className="max-w-md text-4xl font-bold leading-tight tracking-tight text-black dark:text-zinc-50">
-              Welcome back! You are successfully authenticated.
-            </h1>
-            <p className="max-w-md text-lg text-zinc-600 dark:text-zinc-400">
-              You can now access protected routes and manage your profile using Clerk.
-            </p>
+            <Button size="lg" asChild className="rounded-full px-8 h-12 text-lg font-semibold shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all hover:scale-105 active:scale-95">
+              <Link href="/dashboard">
+                Go to Dashboard
+              </Link>
+            </Button>
           </SignedIn>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-zinc-800 dark:hover:bg-zinc-200 md:w-[180px]"
-            href="https://clerk.com/docs"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Clerk Documentation
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-zinc-200 px-5 transition-colors hover:bg-zinc-50 dark:border-zinc-800 dark:hover:bg-zinc-900 md:w-[180px]"
-            href="https://nextjs.org/docs"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Next.js Docs
-          </a>
-        </div>
-      </main>
+      </div>
+
+      {/* Decorative lines or patterns could go here for more "WOW" effect */}
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:40px_40px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] pointer-events-none" />
     </div>
   );
 }
+
 
