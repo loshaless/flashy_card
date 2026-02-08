@@ -1,10 +1,10 @@
 "use server";
 
 import { auth } from "@clerk/nextjs/server";
-import { db } from "@/lib/db";
-import { decks } from "@/src/db/schema";
+import { createDeck, deleteDeck, updateDeck } from "@/src/db/queries/decks";
 import { z } from "zod";
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 
 const createDeckSchema = z.object({
     title: z.string().min(1, "Title is required").max(100),
@@ -17,16 +17,39 @@ export async function createDeckAction(data: CreateDeckInput) {
     const { userId } = await auth();
 
     if (!userId) {
+        redirect("/");
+    }
+
+    const validatedData = createDeckSchema.parse(data);
+
+    await createDeck(userId, validatedData);
+
+    revalidatePath("/dashboard");
+}
+
+export async function updateDeckAction(deckId: number, data: CreateDeckInput) {
+    const { userId } = await auth();
+
+    if (!userId) {
         throw new Error("Unauthorized");
     }
 
     const validatedData = createDeckSchema.parse(data);
 
-    await db.insert(decks).values({
-        userId,
-        title: validatedData.title,
-        description: validatedData.description,
-    });
+    await updateDeck(deckId, userId, validatedData);
+
+    revalidatePath("/dashboard");
+    revalidatePath(`/decks/${deckId}`);
+}
+
+export async function deleteDeckAction(deckId: number) {
+    const { userId } = await auth();
+
+    if (!userId) {
+        throw new Error("Unauthorized");
+    }
+
+    await deleteDeck(deckId, userId);
 
     revalidatePath("/dashboard");
 }

@@ -37,22 +37,24 @@ export default function RootLayout({
     >
       <html lang="en" className="dark">
         <body className={`${poppins.variable} font-sans antialiased`}>
-          <header className="flex justify-between items-center p-4 border-b">
-            <div className="font-bold text-xl">Vibe Coding</div>
-            <div className="flex gap-4">
-              <SignedOut>
-                <div className="flex gap-2">
-                  <SignInButton mode="modal">
-                    <Button variant="default">Sign In</Button>
-                  </SignInButton>
-                  <SignUpButton mode="modal">
-                    <Button variant="secondary">Sign Up</Button>
-                  </SignUpButton>
-                </div>
-              </SignedOut>
-              <SignedIn>
-                <UserButton afterSignOutUrl="/" />
-              </SignedIn>
+          <header className="border-b">
+            <div className="container mx-auto flex justify-between items-center h-16 px-4">
+              <div className="font-bold text-xl">Flash Card</div>
+              <div className="flex gap-4">
+                <SignedOut>
+                  <div className="flex gap-2">
+                    <SignInButton mode="modal">
+                      <Button variant="default">Sign In</Button>
+                    </SignInButton>
+                    <SignUpButton mode="modal">
+                      <Button variant="secondary">Sign Up</Button>
+                    </SignUpButton>
+                  </div>
+                </SignedOut>
+                <SignedIn>
+                  <UserButton afterSignOutUrl="/" />
+                </SignedIn>
+              </div>
             </div>
           </header>
           {children}
