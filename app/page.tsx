@@ -33,6 +33,14 @@ export default function Home() {
                 Sign Up
               </Button>
             </SignUpButton>
+            <form action={async () => {
+              const { loginAsGuest } = await import("@/app/actions/guest");
+              await loginAsGuest();
+            }}>
+              <Button variant="ghost" size="lg" className="rounded-full px-8 h-12 text-lg font-semibold transition-all hover:scale-105 active:scale-95">
+                Guest Mode
+              </Button>
+            </form>
           </SignedOut>
 
           <SignedIn>

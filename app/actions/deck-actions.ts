@@ -1,6 +1,6 @@
 "use server";
 
-import { auth } from "@clerk/nextjs/server";
+import { getAuth } from "@/lib/auth-helper";
 import { createDeck, deleteDeck, updateDeck, getUserDecks } from "@/src/db/queries/decks";
 import { z } from "zod";
 import { revalidatePath } from "next/cache";
@@ -14,7 +14,7 @@ const createDeckSchema = z.object({
 export type CreateDeckInput = z.infer<typeof createDeckSchema>;
 
 export async function createDeckAction(data: CreateDeckInput) {
-    const { userId, has } = await auth();
+    const { userId, has } = await getAuth();
 
     if (!userId) {
         redirect("/");
@@ -37,7 +37,7 @@ export async function createDeckAction(data: CreateDeckInput) {
 }
 
 export async function updateDeckAction(deckId: number, data: CreateDeckInput) {
-    const { userId } = await auth();
+    const { userId } = await getAuth();
 
     if (!userId) {
         throw new Error("Unauthorized");
@@ -52,7 +52,7 @@ export async function updateDeckAction(deckId: number, data: CreateDeckInput) {
 }
 
 export async function deleteDeckAction(deckId: number) {
-    const { userId } = await auth();
+    const { userId } = await getAuth();
 
     if (!userId) {
         throw new Error("Unauthorized");

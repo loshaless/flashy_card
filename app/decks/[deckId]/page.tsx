@@ -1,4 +1,4 @@
-import { auth } from "@clerk/nextjs/server";
+import { getAuth } from "@/lib/auth-helper";
 import { getDeckById } from "@/src/db/queries/decks";
 import { getCardsByDeckId } from "@/src/db/queries/cards";
 import { redirect } from "next/navigation";
@@ -20,7 +20,7 @@ type Props = {
 };
 
 export default async function DeckPage({ params }: Props) {
-    const { userId, has } = await auth();
+    const { userId, has } = await getAuth();
     if (!userId) redirect("/");
 
     const isPro = has({ plan: "pro" });

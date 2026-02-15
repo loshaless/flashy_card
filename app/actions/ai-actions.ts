@@ -1,6 +1,6 @@
 "use server";
 
-import { auth } from "@clerk/nextjs/server";
+import { getAuth } from "@/lib/auth-helper";
 import { generateFlashcardsContent } from "@/lib/ai";
 import { bulkCreateCards } from "@/src/db/queries/cards";
 import { revalidatePath } from "next/cache";
@@ -16,7 +16,7 @@ const generateAICardsSchema = z.object({
 export type GenerateAICardsInput = z.infer<typeof generateAICardsSchema>;
 
 export async function generateAICardsAction(data: GenerateAICardsInput) {
-    const { userId, has } = await auth();
+    const { userId, has } = await getAuth();
 
     if (!userId) {
         throw new Error("Unauthorized");

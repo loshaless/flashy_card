@@ -1,4 +1,4 @@
-import { auth } from "@clerk/nextjs/server";
+import { getAuth } from "@/lib/auth-helper";
 import { getUserDecks } from "@/src/db/queries/decks";
 import { CreateDeckDialog } from "@/components/create-deck-dialog";
 import { DeleteDeckButton } from "@/components/delete-deck-button";
@@ -9,7 +9,7 @@ import { BookOpen, Layers } from "lucide-react";
 import { redirect } from "next/navigation";
 
 export default async function DashboardPage() {
-    const { userId, has } = await auth();
+    const { userId, has } = await getAuth();
 
     if (!userId) {
         redirect("/");

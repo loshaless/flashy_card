@@ -1,6 +1,6 @@
 "use server";
 
-import { auth } from "@clerk/nextjs/server";
+import { getAuth } from "@/lib/auth-helper";
 import { createCard, updateCard, deleteCard } from "@/src/db/queries/cards";
 import { z } from "zod";
 import { revalidatePath } from "next/cache";
@@ -22,7 +22,7 @@ export type CreateCardInput = z.infer<typeof createCardSchema>;
 export type UpdateCardInput = z.infer<typeof updateCardSchema>;
 
 export async function createCardAction(data: CreateCardInput) {
-    const { userId } = await auth();
+    const { userId } = await getAuth();
 
     if (!userId) {
         throw new Error("Unauthorized");
@@ -36,7 +36,7 @@ export async function createCardAction(data: CreateCardInput) {
 }
 
 export async function updateCardAction(data: UpdateCardInput) {
-    const { userId } = await auth();
+    const { userId } = await getAuth();
 
     if (!userId) {
         throw new Error("Unauthorized");
@@ -53,7 +53,7 @@ export async function updateCardAction(data: UpdateCardInput) {
 }
 
 export async function deleteCardAction(cardId: number, deckId: number) {
-    const { userId } = await auth();
+    const { userId } = await getAuth();
 
     if (!userId) {
         throw new Error("Unauthorized");
@@ -75,7 +75,7 @@ const bulkCreateCardsSchema = z.object({
 export type BulkCreateCardsInput = z.infer<typeof bulkCreateCardsSchema>;
 
 export async function bulkCreateCardsAction(data: BulkCreateCardsInput) {
-    const { userId, has } = await auth();
+    const { userId, has } = await getAuth();
 
     if (!userId) {
         throw new Error("Unauthorized");

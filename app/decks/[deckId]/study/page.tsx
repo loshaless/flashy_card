@@ -1,7 +1,6 @@
-
 import { getCardsByDeckId } from "@/src/db/queries/cards";
 import { getDeckById } from "@/src/db/queries/decks";
-import { currentUser } from "@clerk/nextjs/server";
+import { getAuth } from "@/lib/auth-helper";
 import { redirect } from "next/navigation";
 import StudySession from "./study-session";
 
@@ -11,9 +10,9 @@ export default async function StudyPage({
     params: Promise<{ deckId: string }>;
 }) {
     const { deckId } = await params;
-    const user = await currentUser();
+    const { userId } = await getAuth();
 
-    if (!user) {
+    if (!userId) {
         redirect("/sign-in");
     }
 
@@ -23,7 +22,7 @@ export default async function StudyPage({
         return <div>Invalid Deck ID</div>;
     }
 
-    const deck = await getDeckById(parsedDeckId, user.id);
+    const deck = await getDeckById(parsedDeckId, userId as string);
 
     if (!deck) {
         return <div>Deck not found</div>;
