@@ -31,3 +31,8 @@ export async function updateCard(cardId: number, data: { front: string; back: st
 export async function deleteCard(cardId: number) {
     return db.delete(cards).where(eq(cards.id, cardId));
 }
+
+export async function bulkCreateCards(data: { deckId: number; front: string; back: string }[]) {
+    return db.insert(cards).values(data).returning();
+}
+

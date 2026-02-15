@@ -98,7 +98,8 @@ export default async function DeckPage({ params }: Props) {
                             }
                         />
                         <BulkAddCardsDialog deckId={deckId} isPro={isPro} />
-                        <AIGenerateDialog deckId={deckId} deckTitle={deck.title} isPro={isPro} />
+                        <AIGenerateDialog deckId={deckId} deckTitle={deck.title} deckDescription={deck.description || ""} isPro={isPro} />
+
                         <EditDeckDialog
                             deck={{ id: deck.id, title: deck.title, description: deck.description }}
                             trigger={
