@@ -1,23 +1,14 @@
+import { LoadingAnimation } from "@/components/loading-animation";
+
 export default function Loading() {
     return (
-        <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-background/80 backdrop-blur-md">
-            <div className="relative">
-                {/* Outer glowing ring */}
-                <div className="absolute inset-0 rounded-full bg-primary/20 blur-xl animate-pulse" />
+        <div className="fixed inset-0 z-100 flex items-center justify-center bg-background/60 backdrop-blur-xl">
+            {/* Background elements for depth */}
+            <div className="absolute top-1/4 left-1/4 w-[300px] h-[300px] bg-primary/10 rounded-full blur-[100px] animate-pulse pointer-events-none" />
+            <div className="absolute bottom-1/4 right-1/4 w-[300px] h-[300px] bg-primary/5 rounded-full blur-[120px] animate-pulse pointer-events-none [animation-delay:1s]" />
 
-                {/* Spinning loader */}
-                <div className="h-16 w-16 rounded-full border-4 border-muted border-t-primary animate-spin shadow-lg shadow-primary/20" />
-            </div>
-
-            <div className="mt-8 space-y-2 text-center animate-in fade-in slide-in-from-bottom-4 duration-700">
-                <h2 className="text-xl font-bold tracking-tight bg-clip-text text-transparent bg-linear-to-r from-foreground to-foreground/70">
-                    Preparing your cards
-                </h2>
-                <div className="flex items-center justify-center gap-1.5">
-                    <div className="h-1.5 w-1.5 rounded-full bg-primary animate-bounce [animation-delay:-0.3s]" />
-                    <div className="h-1.5 w-1.5 rounded-full bg-primary animate-bounce [animation-delay:-0.15s]" />
-                    <div className="h-1.5 w-1.5 rounded-full bg-primary animate-bounce" />
-                </div>
+            <div className="relative z-10 p-10 rounded-3xl border border-white/5 bg-background/40 backdrop-blur-2xl shadow-2xl shadow-primary/5">
+                <LoadingAnimation message="Preparing your journey" />
             </div>
         </div>
     );

@@ -10,6 +10,7 @@ import { dark } from "@clerk/themes";
 import { Button } from "@/components/ui/button";
 import { Toaster } from "@/components/ui/sonner";
 import Link from "next/link";
+import NextTopLoader from "nextjs-toploader";
 import "./globals.css";
 import { getAuth } from "@/lib/auth-helper";
 import { logoutGuest } from "@/app/actions/guest";
@@ -40,6 +41,7 @@ export default async function RootLayout({
     >
       <html lang="en" className="dark">
         <body className={`${poppins.variable} font-sans antialiased`}>
+          <NextTopLoader color="var(--primary)" showSpinner={false} shadow="0 0 10px var(--primary),0 0 5px var(--primary)" />
           <header className="border-b">
             <div className="container mx-auto flex justify-between items-center h-16 px-4">
               <div className="flex items-center gap-8">
